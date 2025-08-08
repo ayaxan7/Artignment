@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ayaan.artignment.domain.model.Lesson
 import com.ayaan.artignment.domain.usecase.GetLessonsUseCase
+import com.ayaan.artignment.domain.usecase.GenerateLessonNotesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,7 @@ import kotlin.random.Random
 
 @HiltViewModel
 class LessonDetailViewModel @Inject constructor(
-    private val getLessonsUseCase: GetLessonsUseCase
+    private val generateLessonNotesUseCase: GenerateLessonNotesUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LessonDetailUiState())
@@ -37,6 +38,37 @@ class LessonDetailViewModel @Inject constructor(
             isLoading = false,
             error = null
         )
+        // Generate lesson notes when lesson is set
+        generateLessonNotes(lesson.mentor, lesson.title)
+    }
+
+    private fun generateLessonNotes(mentorName: String, lessonTitle: String) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isNotesLoading = true,
+                notesError = null
+            )
+
+            try {
+                val notes = generateLessonNotesUseCase(mentorName, lessonTitle)
+                _uiState.value = _uiState.value.copy(
+                    lessonNotes = notes,
+                    isNotesLoading = false,
+                    notesError = null
+                )
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    isNotesLoading = false,
+                    notesError = "Failed to generate lesson notes: ${e.message}"
+                )
+            }
+        }
+    }
+
+    fun retryGenerateNotes() {
+        _uiState.value.lesson?.let { lesson ->
+            generateLessonNotes(lesson.mentor, lesson.title)
+        }
     }
 
     fun toggleVideoPlayback() {

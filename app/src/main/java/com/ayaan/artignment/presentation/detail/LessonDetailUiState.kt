@@ -7,7 +7,10 @@ data class LessonDetailUiState(
     val lesson: Lesson? = null,
     val isLoading: Boolean = false,
     val error: String? = null,
-    val isVideoPlaying: Boolean = false
+    val isVideoPlaying: Boolean = false,
+    val lessonNotes: String = "",
+    val isNotesLoading: Boolean = false,
+    val notesError: String? = null
 )
 
 sealed class UploadState {

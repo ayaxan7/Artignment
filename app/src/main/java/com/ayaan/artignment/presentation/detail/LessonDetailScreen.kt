@@ -174,11 +174,78 @@ fun LessonDetailScreen(
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = getLessonNotes(),
-                            style = MaterialTheme.typography.bodyMedium,
-                            lineHeight = MaterialTheme.typography.bodyMedium.lineHeight * 1.5
-                        )
+
+                        // Dynamic lesson notes content
+                        when {
+                            uiState.isNotesLoading -> {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(200.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        CircularProgressIndicator(modifier = Modifier.size(32.dp))
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                        Text(
+                                            text = "Generating lesson notes with AI...",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
+                            }
+                            uiState.notesError != null -> {
+                                Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = MaterialTheme.colorScheme.errorContainer
+                                    )
+                                ) {
+                                    Column(
+                                        modifier = Modifier.padding(16.dp)
+                                    ) {
+                                        Text(
+                                            text = "Failed to generate notes",
+                                            style = MaterialTheme.typography.titleMedium,
+                                            color = MaterialTheme.colorScheme.onErrorContainer,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                        Text(
+                                            text = uiState.notesError ?: "Unknown error",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.onErrorContainer
+                                        )
+                                        Spacer(modifier = Modifier.height(12.dp))
+                                        Button(
+                                            onClick = { viewModel.retryGenerateNotes() },
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = MaterialTheme.colorScheme.primary
+                                            )
+                                        ) {
+                                            Text("Retry")
+                                        }
+                                    }
+                                }
+                            }
+                            uiState.lessonNotes.isNotBlank() -> {
+                                Text(
+                                    text = uiState.lessonNotes,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight * 1.5
+                                )
+                            }
+                            else -> {
+                                Text(
+                                    text = "No lesson notes available.",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
                     }
 
                     // Submit Practice Button
@@ -279,62 +346,6 @@ fun VideoPlayer(
             )
         }
     }
-}
-
-private fun getLessonNotes(): String {
-    return """
-        Welcome to this comprehensive lesson on Android development fundamentals!
-
-        In this lesson, we'll cover the following topics:
-
-        1. Introduction to Android Architecture
-        Android follows a layered architecture that consists of several key components:
-        - Applications Layer: Contains all the installed apps
-        - Application Framework: Provides high-level services to applications
-        - Android Runtime: Includes core libraries and ART (Android Runtime)
-        - Platform Libraries: Native C/C++ libraries used by Android
-        - Linux Kernel: The foundation layer that handles hardware abstraction
-
-        2. Understanding Activities and Fragments
-        Activities represent a single screen with a user interface, while Fragments are reusable UI components that can be combined to create flexible layouts. Each Activity has a lifecycle with methods like onCreate(), onStart(), onResume(), onPause(), onStop(), and onDestroy().
-
-        3. Layouts and Views
-        Android provides several layout types:
-        - LinearLayout: Arranges views in a single row or column
-        - RelativeLayout: Positions views relative to parent or other views
-        - ConstraintLayout: Flexible layout with constraint-based positioning
-        - FrameLayout: Simplest layout for single child view
-
-        4. Intent System
-        Intents are messaging objects used to request actions from other components. There are two types:
-        - Explicit Intents: Specify the exact component to start
-        - Implicit Intents: Declare general action to perform
-
-        5. Data Storage Options
-        Android offers several data storage mechanisms:
-        - Shared Preferences: For small key-value pairs
-        - Internal Storage: Private app data
-        - External Storage: Shared data accessible by other apps
-        - SQLite Database: Structured data storage
-        - Room Database: Modern abstraction over SQLite
-
-        6. Best Practices
-        - Follow Material Design guidelines
-        - Implement proper error handling
-        - Optimize for different screen sizes
-        - Handle configuration changes gracefully
-        - Use appropriate threading for background tasks
-
-        Remember to practice these concepts by building small projects and experimenting with different components. The best way to learn Android development is through hands-on coding experience!
-
-        Additional Resources:
-        - Official Android Developer Documentation
-        - Android Jetpack Components
-        - Kotlin Programming Language Guide
-        - Material Design Guidelines
-
-        Keep practicing and happy coding! 🚀
-    """.trimIndent()
 }
 
 private fun getFileName(context: Context, uri: Uri): String {
