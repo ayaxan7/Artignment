@@ -19,13 +19,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ArtignmentTheme {
+            ArtignmentTheme(darkTheme = false) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    NavigationGraph(navController = navController, lessons = emptyList())
+                    NavigationGraph(navController = navController)
                 }
             }
         }

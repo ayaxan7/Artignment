@@ -7,7 +7,6 @@ import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material3.*
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,7 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,50 +24,60 @@ fun SubmitPracticeBottomSheet(
     onUploadFile: () -> Unit,
     onRetry: () -> Unit
 ) {
-    Dialog(onDismissRequest = onDismiss) {
-        Card(
+    val bottomSheetState = rememberModalBottomSheetState()
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = bottomSheetState,
+        dragHandle = {
+            Surface(
+                modifier = Modifier.padding(vertical = 8.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(width = 32.dp, height = 4.dp)
+                )
+            }
+        }
+    ) {
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
+                .padding(24.dp)
+                .padding(bottom = 16.dp), // Extra bottom padding for navigation bar
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Submit Practice",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
-                )
+            Text(
+                text = "Submit Practice",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
 
-                Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-                when (uploadUiState.uploadState) {
-                    is UploadState.Idle -> {
-                        IdleContent(
-                            selectedFileName = uploadUiState.selectedFileName,
-                            onSelectFile = onSelectFile,
-                            onUploadFile = onUploadFile,
-                            onDismiss = onDismiss
-                        )
-                    }
-                    is UploadState.InProgress -> {
-                        UploadProgressContent(progress = uploadUiState.uploadState.progress)
-                    }
-                    is UploadState.Success -> {
-                        SuccessContent()
-                    }
-                    is UploadState.Error -> {
-                        ErrorContent(
-                            message = uploadUiState.uploadState.message,
-                            onRetry = onRetry,
-                            onDismiss = onDismiss
-                        )
-                    }
+            when (uploadUiState.uploadState) {
+                is UploadState.Idle -> {
+                    IdleContent(
+                        selectedFileName = uploadUiState.selectedFileName,
+                        onSelectFile = onSelectFile,
+                        onUploadFile = onUploadFile,
+                        onDismiss = onDismiss
+                    )
+                }
+                is UploadState.InProgress -> {
+                    UploadProgressContent(progress = uploadUiState.uploadState.progress)
+                }
+                is UploadState.Success -> {
+                    SuccessContent()
+                }
+                is UploadState.Error -> {
+                    ErrorContent(
+                        message = uploadUiState.uploadState.message,
+                        onRetry = onRetry,
+                        onDismiss = onDismiss
+                    )
                 }
             }
         }
@@ -255,7 +263,8 @@ fun SubmitPracticeBottomSheetPreview() {
         SubmitPracticeBottomSheet(
             uploadUiState = UploadUiState(
                 uploadState = UploadState.Idle,
-                selectedFileName = "sample_file.pdf"
+                selectedFileName = "practice_submission.pdf",
+                isBottomSheetVisible = true
             ),
             onDismiss = {},
             onSelectFile = {},

@@ -1,5 +1,6 @@
 package com.ayaan.artignment.presentation.detail
 
+import android.net.Uri
 import com.ayaan.artignment.domain.model.Lesson
 
 data class LessonDetailUiState(
@@ -19,5 +20,6 @@ sealed class UploadState {
 data class UploadUiState(
     val uploadState: UploadState = UploadState.Idle,
     val selectedFileName: String? = null,
+    val selectedFileUri: Uri? = null,
     val isBottomSheetVisible: Boolean = false
 )

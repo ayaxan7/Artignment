@@ -1,6 +1,11 @@
 package com.ayaan.artignment.presentation.detail
 
+import android.content.Context
+import android.net.Uri
+import android.provider.OpenableColumns
 import android.view.ViewGroup
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -39,6 +44,22 @@ fun LessonDetailScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val uploadUiState by viewModel.uploadUiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    // File picker launcher
+    val filePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            val fileName = getFileName(context, it)
+            viewModel.onFileSelected(it, fileName)
+        }
+    }
+
+    // Set the callback in the ViewModel
+    LaunchedEffect(filePickerLauncher) {
+        viewModel.setFilePickerCallback { filePickerLauncher.launch("*/*") }
+    }
 
     LaunchedEffect(lesson) {
         viewModel.setLesson(lesson)
@@ -66,79 +87,113 @@ fun LessonDetailScreen(
             )
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            // Header with lesson title and mentor
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
-                Column(
+        when {
+            uiState.isLoading -> {
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = lesson.title,
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "By ${lesson.mentor}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    CircularProgressIndicator()
                 }
             }
-
-            // Video Player
-            VideoPlayer(
-                lesson = lesson,
-                isPlaying = uiState.isVideoPlaying,
-                onTogglePlayback = { viewModel.toggleVideoPlayback() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(220.dp)
-                    .padding(horizontal = 16.dp)
-            )
-
-            // Scrollable content
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = "Lesson Notes",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = getLessonNotes(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight * 1.5
-                )
+            uiState.error != null -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Error: ${uiState.error}",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = { viewModel.setLesson(lesson) }) {
+                        Text("Retry")
+                    }
+                }
             }
+            uiState.lesson != null -> {
+                val lesson = uiState.lesson!!
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                ) {
+                    // Header with lesson title and mentor
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        ) {
+                            Text(
+                                text = lesson.title,
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "By ${lesson.mentor}",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
 
-            // Submit Practice Button
-            Button(
-                onClick = { viewModel.showSubmitBottomSheet() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
-            ) {
-                Text("Submit Practice")
+                    // Video Player
+                    VideoPlayer(
+                        lesson = lesson,
+                        isPlaying = uiState.isVideoPlaying,
+                        onTogglePlayback = { viewModel.toggleVideoPlayback() },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(220.dp)
+                            .padding(horizontal = 16.dp)
+                    )
+
+                    // Scrollable content
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .verticalScroll(rememberScrollState())
+                            .padding(16.dp)
+                    ) {
+                        Text(
+                            text = "Lesson Notes",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            text = getLessonNotes(),
+                            style = MaterialTheme.typography.bodyMedium,
+                            lineHeight = MaterialTheme.typography.bodyMedium.lineHeight * 1.5
+                        )
+                    }
+
+                    // Submit Practice Button
+                    Button(
+                        onClick = { viewModel.showSubmitBottomSheet() },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        )
+                    ) {
+                        Text("Submit Practice")
+                    }
+                }
             }
         }
     }
@@ -282,6 +337,18 @@ private fun getLessonNotes(): String {
     """.trimIndent()
 }
 
+private fun getFileName(context: Context, uri: Uri): String {
+    var fileName = ""
+    val cursor = context.contentResolver.query(uri, null, null, null, null)
+    cursor?.use {
+        val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+        if (it.moveToFirst() && nameIndex != -1) {
+            fileName = it.getString(nameIndex)
+        }
+    }
+    return fileName
+}
+
 @Preview(showBackground = true)
 @Composable
 fun LessonDetailScreenPreview() {
@@ -289,11 +356,11 @@ fun LessonDetailScreenPreview() {
         LessonDetailScreen(
             lesson = Lesson(
                 id = "1",
-                title = "Introduction to Android Development",
+                title = "Sample Lesson",
                 mentor = "John Doe",
-                thumbnailUrl = "https://example.com/thumbnail.jpg",
-                videoUrl = "https://example.com/video.mp4",
-                description = "Learn the basics of Android development"
+                videoUrl = "https://www.example.com/video.mp4",
+                thumbnailUrl = "https://www.example.com/thumbnail.jpg",
+                description = "These are sample notes for the lesson."
             ),
             onNavigateBack = {}
         )

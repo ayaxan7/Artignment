@@ -1,5 +1,9 @@
 package com.ayaan.artignment.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Lesson(
     val id: String,
     val title: String,
@@ -7,4 +11,4 @@ data class Lesson(
     val thumbnailUrl: String,
     val videoUrl: String,
     val description: String
-)
+) : Parcelable

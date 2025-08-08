@@ -1,8 +1,10 @@
 package com.ayaan.artignment.presentation.detail
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ayaan.artignment.domain.model.Lesson
+import com.ayaan.artignment.domain.usecase.GetLessonsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +15,9 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 @HiltViewModel
-class LessonDetailViewModel @Inject constructor() : ViewModel() {
+class LessonDetailViewModel @Inject constructor(
+    private val getLessonsUseCase: GetLessonsUseCase
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LessonDetailUiState())
     val uiState: StateFlow<LessonDetailUiState> = _uiState.asStateFlow()
@@ -21,8 +25,18 @@ class LessonDetailViewModel @Inject constructor() : ViewModel() {
     private val _uploadUiState = MutableStateFlow(UploadUiState())
     val uploadUiState: StateFlow<UploadUiState> = _uploadUiState.asStateFlow()
 
+    private var filePickerCallback: (() -> Unit)? = null
+
+    fun setFilePickerCallback(callback: () -> Unit) {
+        filePickerCallback = callback
+    }
+
     fun setLesson(lesson: Lesson) {
-        _uiState.value = _uiState.value.copy(lesson = lesson)
+        _uiState.value = _uiState.value.copy(
+            lesson = lesson,
+            isLoading = false,
+            error = null
+        )
     }
 
     fun toggleVideoPlayback() {
@@ -42,14 +56,20 @@ class LessonDetailViewModel @Inject constructor() : ViewModel() {
         _uploadUiState.value = _uploadUiState.value.copy(
             isBottomSheetVisible = false,
             uploadState = UploadState.Idle,
-            selectedFileName = null
+            selectedFileName = null,
+            selectedFileUri = null
         )
     }
 
     fun selectFile() {
-        // Mock file selection
-        val mockFileName = "practice_submission_${System.currentTimeMillis()}.pdf"
-        _uploadUiState.value = _uploadUiState.value.copy(selectedFileName = mockFileName)
+        filePickerCallback?.invoke()
+    }
+
+    fun onFileSelected(uri: Uri?, fileName: String?) {
+        _uploadUiState.value = _uploadUiState.value.copy(
+            selectedFileName = fileName,
+            selectedFileUri = uri
+        )
     }
 
     fun uploadFile() {
