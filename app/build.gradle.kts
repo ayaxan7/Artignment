@@ -91,10 +91,10 @@ dependencies {
 
     // Coil for image loading
     implementation(libs.coil)
-    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    implementation(libs.androidx.material.icons.extended)
 
     // Gemini AI
-    implementation("com.google.ai.client.generativeai:generativeai:0.7.0")
+    implementation(libs.generativeai)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
