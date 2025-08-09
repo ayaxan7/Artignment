@@ -9,29 +9,32 @@ import com.ayaan.artignment.domain.model.Lesson
 import com.ayaan.artignment.presentation.detail.LessonDetailScreen
 import com.ayaan.artignment.presentation.lessons.LessonsScreen
 
-object Routes {
-    const val LESSONS = "lessons"
-    const val LESSON_DETAIL = "lesson_detail"
+//object Routes {
+//    const val LESSONS = "lessons"
+//    const val LESSON_DETAIL = "lesson_detail"
+//}
+sealed class Routes(val route: String) {
+    object Lessons : Routes("lessons")
+    object LessonDetail : Routes("lesson_detail")
 }
-
 @Composable
 fun NavigationGraph(
     navController: NavHostController
 ) {
     NavHost(
         navController = navController,
-        startDestination = Routes.LESSONS
+        startDestination = Routes.Lessons.route
     ) {
-        composable(Routes.LESSONS) {
+        composable(Routes.Lessons.route) {
             LessonsScreen(
                 onLessonClick = { lesson ->
                     navController.currentBackStackEntry?.savedStateHandle?.set("lesson", lesson)
-                    navController.navigate(Routes.LESSON_DETAIL)
+                    navController.navigate(Routes.LessonDetail.route)
                 }
             )
         }
 
-        composable(Routes.LESSON_DETAIL) { backStackEntry ->
+        composable(Routes.LessonDetail.route) { backStackEntry ->
             val lesson = navController.previousBackStackEntry?.savedStateHandle?.get<Lesson>("lesson")
 
             if (lesson != null) {
