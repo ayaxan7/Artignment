@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -32,8 +33,8 @@ fun UploadProgressContent(progress: Int) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp),
-            color = ProgressIndicatorDefaults.linearColor,
-            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            color = Color.Blue.copy(alpha = 0.7f),
+            trackColor =Color.Blue.copy(alpha = 0.7f),
             strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
         )
 

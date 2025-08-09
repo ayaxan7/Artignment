@@ -17,6 +17,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,10 +40,13 @@ fun SubmitPracticeBottomSheet(
     val bottomSheetState = rememberModalBottomSheetState()
 
     ModalBottomSheet(
-        onDismissRequest = onDismiss, sheetState = bottomSheetState, dragHandle = {
+        onDismissRequest = onDismiss,
+        sheetState = bottomSheetState,
+        containerColor = Color.White,
+        dragHandle = {
             Surface(
                 modifier = Modifier.padding(vertical = 8.dp),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = Color.Blue.copy(alpha = 0.7f),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Box(
@@ -54,13 +58,14 @@ fun SubmitPracticeBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(24.dp)
-                .padding(bottom = 16.dp), // Extra bottom padding for navigation bar
+                .padding(bottom = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "Submit Practice",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color.Blue.copy(alpha = 0.7f)
             )
 
             Spacer(modifier = Modifier.height(24.dp))

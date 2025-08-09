@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -32,9 +34,16 @@ fun IdleContent(
         OutlinedButton(
             onClick = onSelectFile, modifier = Modifier.fillMaxWidth()
         ) {
-            Icon(Icons.Default.AttachFile, contentDescription = "Select file")
+            Icon(
+                Icons.Default.AttachFile,
+                contentDescription = "Select file",
+                tint = Color.Blue.copy(alpha = 0.7f)
+            )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(if (selectedFileName == null) "Select File" else "Change File")
+            Text(
+                text = if (selectedFileName == null) "Select File" else "Change File",
+                color = Color.Blue.copy(alpha = 0.7f)
+            )
         }
 
         if (selectedFileName != null) {
@@ -42,7 +51,7 @@ fun IdleContent(
             Text(
                 text = "Selected: $selectedFileName",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = Color.Blue.copy(alpha = 0.7f)
             )
         }
 
@@ -54,15 +63,24 @@ fun IdleContent(
             OutlinedButton(
                 onClick = onDismiss, modifier = Modifier.weight(1f)
             ) {
-                Text("Cancel")
+                Text(
+                    "Cancel",
+                    color = Color.Blue.copy(alpha = 0.7f)
+                )
             }
 
             Button(
                 onClick = onUploadFile,
                 enabled = selectedFileName != null,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Blue.copy(alpha = 0.7f)
+                )
             ) {
-                Text("Upload")
+                Text(
+                    "Upload",
+                    color = Color.White
+                )
             }
         }
     }
