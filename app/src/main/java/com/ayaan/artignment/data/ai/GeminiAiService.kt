@@ -39,45 +39,42 @@ class GeminiAiService @Inject constructor() {
             val response = generativeModel.generateContent(prompt)
             response.text ?: getDefaultLessonNotes(mentorName, lessonTitle)
         } catch (e: Exception) {
+            e.printStackTrace()
             // Fallback to default notes if API fails
             getDefaultLessonNotes(mentorName, lessonTitle)
         }
     }
 
-    private fun getDefaultLessonNotes(mentorName: String, lessonTitle: String): String {
-        return """
-            Welcome to this comprehensive lesson on $lessonTitle with $mentorName!
+private fun getDefaultLessonNotes(mentorName: String, lessonTitle: String): String {
+    return """
+        Welcome to this engaging music lesson on $lessonTitle with $mentorName!
 
-            In this lesson, we'll explore the fundamental concepts and practical applications of this topic. 
-            $mentorName brings years of expertise to guide you through each step of the learning process.
+        In this session, we will dive into the essential concepts and practical skills needed to understand and enjoy music. 
+        $mentorName will guide you through each topic, sharing expertise and passion for music education.
 
-            Key Learning Objectives:
-            • Understand the core principles and foundations
-            • Learn practical implementation techniques
-            • Explore real-world applications and use cases
-            • Develop hands-on skills through examples
-            • Master best practices and common pitfalls to avoid
+        Lesson Structure:
+        • Introduction to the main theme and its relevance in music
+        • Key musical concepts explained with clear examples
+        • Step-by-step breakdowns of techniques or theory
+        • Practical exercises and listening activities
+        • Tips for practice and further exploration
 
-            Throughout this lesson, you'll discover how to apply these concepts effectively in your own projects. 
-            $mentorName will share insights from industry experience and provide practical tips that you can 
-            implement immediately.
+        Throughout the lesson, you will:
+        • Learn foundational music theory and terminology
+        • Explore real-world applications, such as composing or performing
+        • Practice with hands-on activities to reinforce your understanding
+        • Discover how to listen actively and analyze musical pieces
 
-            The content is structured to take you from basic understanding to practical mastery. Each section 
-            builds upon the previous one, ensuring a smooth learning progression. You'll find examples, 
-            exercises, and real-world scenarios that reinforce the concepts.
+        Best Practices for Music Learning:
+        • Listen to a variety of music styles and genres
+        • Practice regularly, even in short sessions
+        • Record yourself to track progress and identify areas for improvement
+        • Collaborate with others or join a music community
+        • Stay curious and open to new musical experiences
 
-            Best Practices and Tips:
-            • Take notes and practice alongside the lesson
-            • Experiment with the concepts in your own environment
-            • Don't hesitate to revisit sections for better understanding
-            • Apply the learning to personal or professional projects
-            • Connect with the community for additional support
+        Remember, learning music is a journey that combines creativity, discipline, and enjoyment. $mentorName is here to support you every step of the way. Take your time, have fun, and let the music inspire you!
 
-            Remember, learning is a journey, and this lesson with $mentorName is designed to provide you with 
-            both theoretical knowledge and practical skills. Take your time to absorb the information and 
-            practice regularly.
-
-            Ready to dive in? Let's begin this exciting learning adventure! 🚀
-        """.trimIndent()
-    }
+        Ready to start? Let’s make some music together! 🎶
+    """.trimIndent()
+}
 }
