@@ -15,7 +15,7 @@ fun LessonNotesSection(
 ) {
     SectionCard(
         icon = Icons.Default.Description,
-        title = "Lesson Notes"
+        title = "Lesson Notes (AI Generated)",
     ) {
         when {
             uiState.isNotesLoading -> {
