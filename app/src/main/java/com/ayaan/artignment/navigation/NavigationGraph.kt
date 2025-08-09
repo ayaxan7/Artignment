@@ -9,10 +9,6 @@ import com.ayaan.artignment.domain.model.Lesson
 import com.ayaan.artignment.presentation.detail.LessonDetailScreen
 import com.ayaan.artignment.presentation.lessons.LessonsScreen
 
-//object Routes {
-//    const val LESSONS = "lessons"
-//    const val LESSON_DETAIL = "lesson_detail"
-//}
 sealed class Routes(val route: String) {
     object Lessons : Routes("lessons")
     object LessonDetail : Routes("lesson_detail")

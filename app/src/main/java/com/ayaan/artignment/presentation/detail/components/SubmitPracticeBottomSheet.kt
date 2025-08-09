@@ -1,4 +1,4 @@
-package com.ayaan.artignment.presentation.detail
+package com.ayaan.artignment.presentation.detail.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ayaan.artignment.presentation.detail.UploadState
+import com.ayaan.artignment.presentation.detail.UploadUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

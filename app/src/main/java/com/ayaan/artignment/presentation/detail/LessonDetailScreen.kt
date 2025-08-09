@@ -3,44 +3,32 @@ package com.ayaan.artignment.presentation.detail
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
-import android.view.ViewGroup
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.media3.common.MediaItem
-import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.ui.PlayerView
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.ayaan.artignment.domain.model.Lesson
+import com.ayaan.artignment.presentation.detail.components.SubmitPracticeBottomSheet
+import com.ayaan.artignment.presentation.detail.components.VideoPlayer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LessonDetailScreen(
-    lesson: Lesson,
-    onNavigateBack: () -> Unit,
-    viewModel: LessonDetailViewModel = hiltViewModel()
+    lesson: Lesson, onNavigateBack: () -> Unit, viewModel: LessonDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val uploadUiState by viewModel.uploadUiState.collectAsStateWithLifecycle()
@@ -71,21 +59,21 @@ fun LessonDetailScreen(
             onDismiss = { viewModel.hideSubmitBottomSheet() },
             onSelectFile = { viewModel.selectFile() },
             onUploadFile = { viewModel.uploadFile() },
-            onRetry = { viewModel.retryUpload() }
-        )
+            onRetry = { viewModel.retryUpload() })
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Lesson Detail") },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
+                title = { Text("Lesson Detail") }, navigationIcon = {
+                IconButton(onClick = onNavigateBack) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                 }
+            }, colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.White
             )
-        }
+            )
+        }, containerColor = Color.White
     ) { paddingValues ->
         when {
             uiState.isLoading -> {
@@ -98,6 +86,7 @@ fun LessonDetailScreen(
                     CircularProgressIndicator()
                 }
             }
+
             uiState.error != null -> {
                 Column(
                     modifier = Modifier
@@ -108,8 +97,7 @@ fun LessonDetailScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Error: ${uiState.error}",
-                        style = MaterialTheme.typography.bodyLarge
+                        text = "Error: ${uiState.error}", style = MaterialTheme.typography.bodyLarge
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(onClick = { viewModel.setLesson(lesson) }) {
@@ -117,6 +105,7 @@ fun LessonDetailScreen(
                     }
                 }
             }
+
             uiState.lesson != null -> {
                 val lesson = uiState.lesson!!
                 Column(
@@ -197,6 +186,7 @@ fun LessonDetailScreen(
                                     }
                                 }
                             }
+
                             uiState.notesError != null -> {
                                 Card(
                                     modifier = Modifier.fillMaxWidth(),
@@ -231,6 +221,7 @@ fun LessonDetailScreen(
                                     }
                                 }
                             }
+
                             uiState.lessonNotes.isNotBlank() -> {
                                 Text(
                                     text = uiState.lessonNotes,
@@ -238,6 +229,7 @@ fun LessonDetailScreen(
                                     lineHeight = MaterialTheme.typography.bodyMedium.lineHeight * 1.5
                                 )
                             }
+
                             else -> {
                                 Text(
                                     text = "No lesson notes available.",
@@ -266,87 +258,6 @@ fun LessonDetailScreen(
     }
 }
 
-@Composable
-fun VideoPlayer(
-    lesson: Lesson,
-    isPlaying: Boolean,
-    onTogglePlayback: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val context = LocalContext.current
-    var exoPlayer by remember { mutableStateOf<ExoPlayer?>(null) }
-    var showThumbnail by remember { mutableStateOf(true) }
-
-    DisposableEffect(Unit) {
-        exoPlayer = ExoPlayer.Builder(context).build().apply {
-            setMediaItem(MediaItem.fromUri(lesson.videoUrl))
-            prepare()
-        }
-        onDispose {
-            exoPlayer?.release()
-        }
-    }
-
-    Box(
-        modifier = modifier.clip(RoundedCornerShape(12.dp))
-    ) {
-        if (showThumbnail) {
-            // Show thumbnail initially
-            AsyncImage(
-                model = ImageRequest.Builder(context)
-                    .data(lesson.thumbnailUrl)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "Video thumbnail",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-
-            // Play button overlay
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.3f)),
-                contentAlignment = Alignment.Center
-            ) {
-                IconButton(
-                    onClick = {
-                        showThumbnail = false
-                        onTogglePlayback()
-                        exoPlayer?.playWhenReady = true
-                    },
-                    modifier = Modifier
-                        .size(64.dp)
-                        .background(
-                            Color.White.copy(alpha = 0.8f),
-                            RoundedCornerShape(32.dp)
-                        )
-                ) {
-                    Icon(
-                        Icons.Default.PlayArrow,
-                        contentDescription = "Play",
-                        modifier = Modifier.size(32.dp),
-                        tint = Color.Black
-                    )
-                }
-            }
-        } else {
-            // Show video player
-            AndroidView(
-                factory = { ctx ->
-                    PlayerView(ctx).apply {
-                        player = exoPlayer
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
-                        )
-                    }
-                },
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-    }
-}
 
 private fun getFileName(context: Context, uri: Uri): String {
     var fileName = ""
@@ -372,8 +283,6 @@ fun LessonDetailScreenPreview() {
                 videoUrl = "https://www.example.com/video.mp4",
                 thumbnailUrl = "https://www.example.com/thumbnail.jpg",
                 description = "These are sample notes for the lesson."
-            ),
-            onNavigateBack = {}
-        )
+            ), onNavigateBack = {})
     }
 }
