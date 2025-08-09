@@ -120,7 +120,7 @@ class LessonDetailViewModel @Inject constructor(
             val isSuccess = Random.nextBoolean()
             if (isSuccess) {
                 _uploadUiState.value = _uploadUiState.value.copy(uploadState = UploadState.Success)
-                delay(1500) // Show success message
+                delay(1500)
                 hideSubmitBottomSheet()
             } else {
                 _uploadUiState.value = _uploadUiState.value.copy(

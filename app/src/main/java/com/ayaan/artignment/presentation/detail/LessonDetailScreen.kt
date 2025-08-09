@@ -40,7 +40,6 @@ fun LessonDetailScreen(
     val uploadUiState by viewModel.uploadUiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    // File picker launcher
     val filePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -50,7 +49,6 @@ fun LessonDetailScreen(
         }
     }
 
-    // Set the callback in the ViewModel
     LaunchedEffect(filePickerLauncher) {
         viewModel.setFilePickerCallback { filePickerLauncher.launch("*/*") }
     }

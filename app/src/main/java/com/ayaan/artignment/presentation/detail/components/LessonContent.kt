@@ -27,10 +27,8 @@ import com.ayaan.artignment.presentation.detail.components.videoplayer.VideoPlay
             .fillMaxSize()
             .padding(paddingValues)
     ) {
-        // Hero Section with title and mentor
         HeroSection(lesson = lesson)
 
-        // Video Player with enhanced styling
         Card(
             modifier = Modifier
                 .fillMaxWidth()
