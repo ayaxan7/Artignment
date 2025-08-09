@@ -1,9 +1,10 @@
-package com.ayaan.artignment.presentation.detail.components
+package com.ayaan.artignment.presentation.detail.components.notes
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -26,7 +27,7 @@ fun LoadingNotesContent() {
                 text = "Generating AI-powered lesson notes...",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                textAlign = TextAlign.Center
             )
         }
     }

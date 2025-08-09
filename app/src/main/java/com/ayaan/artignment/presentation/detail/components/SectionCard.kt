@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,7 +38,7 @@ fun SectionCard(
                     contentDescription = null,
                     modifier = Modifier
                         .size(24.dp),
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = Color.Blue.copy(alpha = 0.7f)
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(

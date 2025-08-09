@@ -1,4 +1,5 @@
 package com.ayaan.artignment.presentation.detail.components
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,52 +16,41 @@ import com.ayaan.artignment.domain.model.Lesson
 
 @Composable
 fun HeroSection(lesson: Lesson) {
-    Card(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 10.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-        )
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
+        Icon(
+            imageVector = Icons.Default.PlayArrow,
+            contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Default.PlayArrow,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(
-                        MaterialTheme.colorScheme.primary,
-                        RoundedCornerShape(12.dp)
-                    )
-                    .padding(12.dp),
-                tint = Color.White
+                .size(48.dp)
+                .background(
+                    color = Color.Blue.copy(alpha = 0.7f),
+                    shape = RoundedCornerShape(12.dp)
+                )
+                .padding(12.dp),
+            tint = Color.White
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = lesson.title,
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
             )
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = lesson.title,
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "By ${lesson.mentor}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontWeight = FontWeight.Medium
-                )
-            }
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "By ${lesson.mentor}",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontWeight = FontWeight.Medium
+            )
         }
     }
 }

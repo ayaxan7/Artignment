@@ -1,4 +1,4 @@
-package com.ayaan.artignment.presentation.detail.components
+package com.ayaan.artignment.presentation.detail.components.videoplayer
 
 import android.view.ViewGroup
 import androidx.compose.foundation.background

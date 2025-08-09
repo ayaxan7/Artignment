@@ -12,6 +12,8 @@ import androidx.compose.ui.unit.dp
 import com.ayaan.artignment.domain.model.Lesson
 import com.ayaan.artignment.presentation.detail.LessonDetailUiState
 import com.ayaan.artignment.presentation.detail.LessonDetailViewModel
+import com.ayaan.artignment.presentation.detail.components.notes.LessonNotesSection
+import com.ayaan.artignment.presentation.detail.components.videoplayer.VideoPlayer
 
 @Composable
  fun LessonContent(
@@ -62,10 +64,5 @@ import com.ayaan.artignment.presentation.detail.LessonDetailViewModel
                 onRetryGenerateNotes = { viewModel.retryGenerateNotes() }
             )
         }
-
-        // Enhanced Submit Practice Button
-        SubmitPracticeButton(
-            onClick = { viewModel.showSubmitBottomSheet() }
-        )
     }
 }

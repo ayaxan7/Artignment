@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -68,17 +69,6 @@ fun LessonDetailScreen(
         )
     }
 
-    // Gradient background
-    val gradientBackground = Brush.verticalGradient(
-        colors = listOf(
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f),
-            MaterialTheme.colorScheme.surface,
-            MaterialTheme.colorScheme.surface
-        ),
-        startY = 0f,
-        endY = 800f
-    )
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -108,12 +98,27 @@ fun LessonDetailScreen(
                 )
             )
         },
+        floatingActionButton = {
+            if (uiState.lesson != null) {
+                FloatingActionButton(
+                    onClick = { viewModel.showSubmitBottomSheet() },
+                    containerColor = Color.Blue.copy(alpha = 0.7f),
+                    contentColor = Color.White,
+                    elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Upload,
+                        contentDescription = "Submit Practice"
+                    )
+                }
+            }
+        },
         containerColor = Color.Transparent
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(gradientBackground)
+                .background(Color.White)
         ) {
             when {
                 uiState.isLoading -> {
