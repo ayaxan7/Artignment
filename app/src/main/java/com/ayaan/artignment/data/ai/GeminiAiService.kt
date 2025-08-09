@@ -1,5 +1,6 @@
 package com.ayaan.artignment.data.ai
 
+import android.util.Log
 import com.ayaan.artignment.BuildConfig
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.generationConfig
@@ -24,22 +25,27 @@ class GeminiAiService @Inject constructor() {
         val prompt = """
             Generate comprehensive lesson notes for a tutorial lesson titled "$lessonTitle" taught by $mentorName.
             
-            Please create 20-30 lines of educational content organized in 3-5 paragraphs with the following structure:
+            Please create 10-15 lines of educational content organized in 2-3 paragraphs with the following structure:
             - Introduction paragraph explaining the topic
-            - 2-3 main concept paragraphs with bullet points and detailed explanations
-            - Conclusion paragraph with practical tips and next steps
+            - 1 main concept paragraphs with bullet points and detailed explanations
+            - Conclusion paragraph with practical tips and next steps in points
             
             Make the content educational, engaging, and suitable for beginners to intermediate learners.
             Include specific examples and practical applications where relevant.
-            
+            Give simple texts, avoid any markdown or HTML formatting, and do not use any code blocks.
             Format the response as plain text with clear paragraph breaks and bullet points.
+            Do not add any personal opinions or subjective statements.
+            Ensure the content is original and not copied from any source.
+            The content should be informative, concise, and easy to understand.
         """.trimIndent()
 
         return try {
             val response = generativeModel.generateContent(prompt)
+            Log.d("GeminiAiService", "AI response: ${response.text}")
             response.text ?: getDefaultLessonNotes(mentorName, lessonTitle)
         } catch (e: Exception) {
             e.printStackTrace()
+            Log.e("GeminiAiService", "Error generating lesson notes: ${e.message}")
             // Fallback to default notes if API fails
             getDefaultLessonNotes(mentorName, lessonTitle)
         }
