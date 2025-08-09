@@ -171,7 +171,8 @@ fun LessonDetailScreenPreview() {
                 mentor = "Sarah Johnson",
                 videoUrl = "https://www.example.com/video.mp4",
                 thumbnailUrl = "https://www.example.com/thumbnail.jpg",
-                description = "Learn advanced digital art techniques including shading, lighting, and composition."
+                description = "Learn advanced digital art techniques including shading, lighting, and composition.",
+                imageUrl = "https://www.example.com/image.jpg"
             ),
             onNavigateBack = {}
         )

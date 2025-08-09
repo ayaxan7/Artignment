@@ -110,7 +110,8 @@ fun LessonItemPreview() {
                 mentor = "John Doe",
                 thumbnailUrl = "https://example.com/thumbnail.jpg",
                 videoUrl = "https://example.com/video.mp4",
-                description = "Learn the basics of Android development with Kotlin"
+                description = "Learn the basics of Android development with Kotlin",
+                imageUrl = "https://example.com/image.jpg"
             ), onItemClick = {})
     }
 }

@@ -10,5 +10,6 @@ data class Lesson(
     val mentor: String,
     val thumbnailUrl: String,
     val videoUrl: String,
-    val description: String
+    val description: String,
+    val imageUrl:String
 ) : Parcelable

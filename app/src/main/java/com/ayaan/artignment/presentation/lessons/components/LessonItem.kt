@@ -45,7 +45,7 @@ fun LessonItem(
             // Large thumbnail image (YouTube-style)
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(lesson.thumbnailUrl)
+                    .data(lesson.imageUrl)
                     .crossfade(true)
                     .build(),
                 contentDescription = "Lesson thumbnail",

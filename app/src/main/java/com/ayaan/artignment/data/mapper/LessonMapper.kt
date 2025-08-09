@@ -11,6 +11,7 @@ fun LessonDto.toDomain(): Lesson {
         mentor = mentor_name,
         thumbnailUrl = video_thumbnail_url,
         videoUrl = video_url,
-        description = "Learn ${lesson_title.lowercase()} with ${mentor_name}"
+        description = "Learn ${lesson_title.lowercase()} with ${mentor_name}",
+        imageUrl = lesson_image_url
     )
 }
